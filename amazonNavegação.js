@@ -2,16 +2,23 @@ const { Builder, By, until, Key, Actions } = require('selenium-webdriver');
 require('dotenv').config();
 const firefox = require('selenium-webdriver/firefox');
 
-// Função para carregar credenciais do arquivo JSON
+// Função para acessar as variáveis de ambiente
 function loadCredentials() {
-    const data = fs.readFileSync('emailsenha.env.json', 'utf8');
-    return JSON.parse(data);
+    const email = process.env.EMAIL;
+    const password = process.env.PASSWORD;
+
+    if (!email || !password) {
+        throw new Error('Missing environment variables EMAIL or PASSWORD');
+    }
+
+    return { email, password };
 }
+
 
 // Carregar credenciais
 const credentials = loadCredentials();
 const email = credentials.email;
-const senha = credentials.senha;
+const senha = credentials.password;
 
 (async function Login() {
     let driver = await new Builder().forBrowser('firefox').build();
